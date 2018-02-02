@@ -1,0 +1,58 @@
+From 40329b0ce41956cfdedb49a7c8c5cd29a6aec5e1 Mon Sep 17 00:00:00 2001
+From: William Douglas <william.douglas@intel.com>
+Date: Fri, 2 Feb 2018 01:03:50 +0000
+Subject: [PATCH] Don't fail if the locklist is not defined
+
+---
+ plugins/versionlock.py | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
+
+diff --git a/plugins/versionlock.py b/plugins/versionlock.py
+index 46f7aaf..1c96cf3 100644
+--- a/plugins/versionlock.py
++++ b/plugins/versionlock.py
+@@ -63,7 +63,7 @@ class VersionLock(dnf.Plugin):
+             return
+ 
+         if not locklist_fn:
+-            raise dnf.exceptions.Error(NO_LOCKLIST)
++            return
+ 
+         excludes_query = self.base.sack.query().filter(empty=True)
+         locked_query = self.base.sack.query().filter(empty=True)
+@@ -138,10 +138,14 @@ class VersionLockCommand(dnf.cli.Command):
+             for pat in _read_locklist():
+                 logger.info(pat)
+         elif cmd == 'clear':
++            if not locklist_fn:
++                return
+             with open(locklist_fn, 'w') as f:
+                 # open in write mode truncates file
+                 pass
+         elif cmd == 'delete':
++            if not locklist_fn:
++                return
+             dirname = os.path.dirname(locklist_fn)
+             (out, tmpfilename) = tempfile.mkstemp(dir=dirname, suffix='.tmp')
+             locked_specs = _read_locklist()
+@@ -164,6 +168,8 @@ class VersionLockCommand(dnf.cli.Command):
+ def _read_locklist():
+     locklist = []
+     try:
++        if not locklist_fn:
++            return locklist
+         with open(locklist_fn) as llfile:
+             for line in llfile.readlines():
+                 if line.startswith('#') or line.strip() == '':
+@@ -191,6 +197,8 @@ def _write_locklist(base, args, try_installed, comment, info, prefix):
+         for pkg in pkgs:
+             specs.add(pkgtup2spec(*pkg.pkgtup))
+ 
++    if not locklist_fn:
++        return
+     with open(locklist_fn, 'a') as f:
+         f.write(comment)
+         for spec in specs:
+-- 
+2.16.1
+

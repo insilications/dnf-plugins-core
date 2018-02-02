@@ -1,5 +1,5 @@
 PKG_NAME := dnf-plugins-core
-URL := https://github.com/rpm-software-management/dnf-plugins-core/archive/2.1.5.tar.gz
-
+URL = https://github.com/rpm-software-management/dnf-plugins-core/archive/2.1.5.tar.gz
+ARCHIVES = 
 
 include ../common/Makefile.common
