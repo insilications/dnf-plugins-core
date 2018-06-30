@@ -4,7 +4,7 @@
 #
 Name     : dnf-plugins-core
 Version  : 2.1.5
-Release  : 6
+Release  : 7
 URL      : https://github.com/rpm-software-management/dnf-plugins-core/archive/2.1.5.tar.gz
 Source0  : https://github.com/rpm-software-management/dnf-plugins-core/archive/2.1.5.tar.gz
 Summary  : Core Plugins for DNF
