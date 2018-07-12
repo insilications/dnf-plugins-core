@@ -1,17 +1,17 @@
-From 40329b0ce41956cfdedb49a7c8c5cd29a6aec5e1 Mon Sep 17 00:00:00 2001
+From 130c67b009658681e9c115d9868d8e9bfaf37729 Mon Sep 17 00:00:00 2001
 From: William Douglas <william.douglas@intel.com>
 Date: Fri, 2 Feb 2018 01:03:50 +0000
-Subject: [PATCH] Don't fail if the locklist is not defined
+Subject: [PATCH 1/2] Don't fail if the locklist is not defined
 
 ---
  plugins/versionlock.py | 10 +++++++++-
  1 file changed, 9 insertions(+), 1 deletion(-)
 
 diff --git a/plugins/versionlock.py b/plugins/versionlock.py
-index 46f7aaf..1c96cf3 100644
+index 389f109..b1ca189 100644
 --- a/plugins/versionlock.py
 +++ b/plugins/versionlock.py
-@@ -63,7 +63,7 @@ class VersionLock(dnf.Plugin):
+@@ -66,7 +66,7 @@ class VersionLock(dnf.Plugin):
              return
  
          if not locklist_fn:
@@ -19,8 +19,8 @@ index 46f7aaf..1c96cf3 100644
 +            return
  
          excludes_query = self.base.sack.query().filter(empty=True)
-         locked_query = self.base.sack.query().filter(empty=True)
-@@ -138,10 +138,14 @@ class VersionLockCommand(dnf.cli.Command):
+         excluded_count = 0
+@@ -155,10 +155,14 @@ class VersionLockCommand(dnf.cli.Command):
              for pat in _read_locklist():
                  logger.info(pat)
          elif cmd == 'clear':
@@ -35,7 +35,7 @@ index 46f7aaf..1c96cf3 100644
              dirname = os.path.dirname(locklist_fn)
              (out, tmpfilename) = tempfile.mkstemp(dir=dirname, suffix='.tmp')
              locked_specs = _read_locklist()
-@@ -164,6 +168,8 @@ class VersionLockCommand(dnf.cli.Command):
+@@ -181,6 +185,8 @@ class VersionLockCommand(dnf.cli.Command):
  def _read_locklist():
      locklist = []
      try:
@@ -44,7 +44,7 @@ index 46f7aaf..1c96cf3 100644
          with open(locklist_fn) as llfile:
              for line in llfile.readlines():
                  if line.startswith('#') or line.strip() == '':
-@@ -191,6 +197,8 @@ def _write_locklist(base, args, try_installed, comment, info, prefix):
+@@ -208,6 +214,8 @@ def _write_locklist(base, args, try_installed, comment, info, prefix):
          for pkg in pkgs:
              specs.add(pkgtup2spec(*pkg.pkgtup))
  
@@ -54,5 +54,5 @@ index 46f7aaf..1c96cf3 100644
          f.write(comment)
          for spec in specs:
 -- 
-2.16.1
+2.18.0
 
