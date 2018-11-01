@@ -4,17 +4,18 @@
 #
 Name     : dnf-plugins-core
 Version  : 3.0.2
-Release  : 14
+Release  : 15
 URL      : https://github.com/rpm-software-management/dnf-plugins-core/archive/3.0.2.tar.gz
 Source0  : https://github.com/rpm-software-management/dnf-plugins-core/archive/3.0.2.tar.gz
 Summary  : Core Plugins for DNF
 Group    : Development/Tools
 License  : GPL-2.0 GPL-2.0+
-Requires: dnf-plugins-core-python3
-Requires: dnf-plugins-core-bin
-Requires: dnf-plugins-core-license
-Requires: dnf-plugins-core-locales
-Requires: dnf-plugins-core-python
+Requires: dnf-plugins-core-libexec = %{version}-%{release}
+Requires: dnf-plugins-core-license = %{version}-%{release}
+Requires: dnf-plugins-core-locales = %{version}-%{release}
+Requires: dnf-plugins-core-man = %{version}-%{release}
+Requires: dnf-plugins-core-python = %{version}-%{release}
+Requires: dnf-plugins-core-python3 = %{version}-%{release}
 BuildRequires : buildreq-cmake
 BuildRequires : gettext-dev
 BuildRequires : pluggy
@@ -23,20 +24,19 @@ BuildRequires : pytest
 BuildRequires : tox
 BuildRequires : virtualenv
 Patch1: 0001-Don-t-fail-if-the-locklist-is-not-defined.patch
-Patch2: 0002-Disable-man-page-install-when-not-generated.patch
 
 %description
 Core Plugins for DNF. This package enhances DNF with builddep, config-manager, copr, debug,
 debuginfo-install, download, needs-restarting, repoclosure, repograph, repomanage and reposync
 commands. Additionally provides generate_completion_cache passive plugin.
 
-%package bin
-Summary: bin components for the dnf-plugins-core package.
-Group: Binaries
-Requires: dnf-plugins-core-license
+%package libexec
+Summary: libexec components for the dnf-plugins-core package.
+Group: Default
+Requires: dnf-plugins-core-license = %{version}-%{release}
 
-%description bin
-bin components for the dnf-plugins-core package.
+%description libexec
+libexec components for the dnf-plugins-core package.
 
 
 %package license
@@ -55,10 +55,18 @@ Group: Default
 locales components for the dnf-plugins-core package.
 
 
+%package man
+Summary: man components for the dnf-plugins-core package.
+Group: Default
+
+%description man
+man components for the dnf-plugins-core package.
+
+
 %package python
 Summary: python components for the dnf-plugins-core package.
 Group: Default
-Requires: dnf-plugins-core-python3
+Requires: dnf-plugins-core-python3 = %{version}-%{release}
 
 %description python
 python components for the dnf-plugins-core package.
@@ -76,25 +84,24 @@ python3 components for the dnf-plugins-core package.
 %prep
 %setup -q -n dnf-plugins-core-3.0.2
 %patch1 -p1
-%patch2 -p1
 
 %build
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C
-export SOURCE_DATE_EPOCH=1535567206
+export SOURCE_DATE_EPOCH=1541106928
 mkdir -p clr-build
 pushd clr-build
 %cmake .. -DPYTHON_DESIRED=3 -DWITH_MAN=0
-make  %{?_smp_mflags}
+make  %{?_smp_mflags} ; make doc-man
 popd
 
 %install
-export SOURCE_DATE_EPOCH=1535567206
+export SOURCE_DATE_EPOCH=1541106928
 rm -rf %{buildroot}
-mkdir -p %{buildroot}/usr/share/doc/dnf-plugins-core
-cp COPYING %{buildroot}/usr/share/doc/dnf-plugins-core/COPYING
+mkdir -p %{buildroot}/usr/share/package-licenses/dnf-plugins-core
+cp COPYING %{buildroot}/usr/share/package-licenses/dnf-plugins-core/COPYING
 pushd clr-build
 %make_install
 popd
@@ -103,13 +110,33 @@ popd
 %files
 %defattr(-,root,root,-)
 
-%files bin
+%files libexec
 %defattr(-,root,root,-)
 /usr/libexec/dnf-utils-3
 
 %files license
-%defattr(-,root,root,-)
-/usr/share/doc/dnf-plugins-core/COPYING
+%defattr(0644,root,root,0755)
+/usr/share/package-licenses/dnf-plugins-core/COPYING
+
+%files man
+%defattr(0644,root,root,0755)
+/usr/share/man/man8/dnf.plugin.builddep.8
+/usr/share/man/man8/dnf.plugin.config_manager.8
+/usr/share/man/man8/dnf.plugin.copr.8
+/usr/share/man/man8/dnf.plugin.debug.8
+/usr/share/man/man8/dnf.plugin.debuginfo-install.8
+/usr/share/man/man8/dnf.plugin.download.8
+/usr/share/man/man8/dnf.plugin.generate_completion_cache.8
+/usr/share/man/man8/dnf.plugin.leaves.8
+/usr/share/man/man8/dnf.plugin.local.8
+/usr/share/man/man8/dnf.plugin.migrate.8
+/usr/share/man/man8/dnf.plugin.needs_restarting.8
+/usr/share/man/man8/dnf.plugin.repoclosure.8
+/usr/share/man/man8/dnf.plugin.repograph.8
+/usr/share/man/man8/dnf.plugin.repomanage.8
+/usr/share/man/man8/dnf.plugin.reposync.8
+/usr/share/man/man8/dnf.plugin.show-leaves.8
+/usr/share/man/man8/dnf.plugin.versionlock.8
 
 %files python
 %defattr(-,root,root,-)
