@@ -1,0 +1,28 @@
+From 45115bfc5935713b46f04d5870ab15ffc2aa2f7b Mon Sep 17 00:00:00 2001
+From: Patrick McCarty <patrick.mccarty@intel.com>
+Date: Wed, 20 Feb 2019 18:24:11 -0800
+Subject: [PATCH 2/2] sphinx-build-3 does not exist
+
+The name "sphinx-build-3" is Fedora-specific.
+
+Signed-off-by: Patrick McCarty <patrick.mccarty@intel.com>
+---
+ doc/CMakeLists.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/doc/CMakeLists.txt b/doc/CMakeLists.txt
+index e67f42e..dd8c69e 100644
+--- a/doc/CMakeLists.txt
++++ b/doc/CMakeLists.txt
+@@ -4,7 +4,7 @@
+ if (${PYTHON_VERSION_MAJOR} STREQUAL "2")
+     SET(SPHINX_BUILD_NAME "sphinx-build")
+ else()
+-    SET(SPHINX_BUILD_NAME "sphinx-build-3")
++    SET(SPHINX_BUILD_NAME "sphinx-build")
+ endif()
+ 
+ ADD_CUSTOM_TARGET (doc-html
+-- 
+2.20.1
+

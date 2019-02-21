@@ -1,17 +1,18 @@
-From 130c67b009658681e9c115d9868d8e9bfaf37729 Mon Sep 17 00:00:00 2001
+From fbeac805155d8ce37493106abcfc42fb6d152441 Mon Sep 17 00:00:00 2001
 From: William Douglas <william.douglas@intel.com>
 Date: Fri, 2 Feb 2018 01:03:50 +0000
 Subject: [PATCH 1/2] Don't fail if the locklist is not defined
 
+Signed-off-by: Patrick McCarty <patrick.mccarty@intel.com>
 ---
  plugins/versionlock.py | 10 +++++++++-
  1 file changed, 9 insertions(+), 1 deletion(-)
 
 diff --git a/plugins/versionlock.py b/plugins/versionlock.py
-index 389f109..b1ca189 100644
+index 26929e9..5f4aeef 100644
 --- a/plugins/versionlock.py
 +++ b/plugins/versionlock.py
-@@ -66,7 +66,7 @@ class VersionLock(dnf.Plugin):
+@@ -68,7 +68,7 @@ class VersionLock(dnf.Plugin):
              return
  
          if not locklist_fn:
@@ -19,7 +20,7 @@ index 389f109..b1ca189 100644
 +            return
  
          excludes_query = self.base.sack.query().filter(empty=True)
-         excluded_count = 0
+         locked_query = self.base.sack.query().filter(empty=True)
 @@ -155,10 +155,14 @@ class VersionLockCommand(dnf.cli.Command):
              for pat in _read_locklist():
                  logger.info(pat)
@@ -44,15 +45,15 @@ index 389f109..b1ca189 100644
          with open(locklist_fn) as llfile:
              for line in llfile.readlines():
                  if line.startswith('#') or line.strip() == '':
-@@ -208,6 +214,8 @@ def _write_locklist(base, args, try_installed, comment, info, prefix):
-         for pkg in pkgs:
+@@ -209,6 +215,8 @@ def _write_locklist(base, args, try_installed, comment, info, prefix):
              specs.add(pkgtup2spec(*pkg.pkgtup))
  
-+    if not locklist_fn:
-+        return
-     with open(locklist_fn, 'a') as f:
-         f.write(comment)
-         for spec in specs:
+     if specs:
++        if not locklist_fn:
++            return
+         with open(locklist_fn, 'a') as f:
+             f.write(comment)
+             for spec in specs:
 -- 
-2.18.0
+2.20.1
 
