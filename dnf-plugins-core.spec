@@ -4,7 +4,7 @@
 #
 Name     : dnf-plugins-core
 Version  : 3.0.2
-Release  : 16
+Release  : 17
 URL      : https://github.com/rpm-software-management/dnf-plugins-core/archive/3.0.2.tar.gz
 Source0  : https://github.com/rpm-software-management/dnf-plugins-core/archive/3.0.2.tar.gz
 Summary  : Core Plugins for DNF
@@ -16,6 +16,7 @@ Requires: dnf-plugins-core-locales = %{version}-%{release}
 Requires: dnf-plugins-core-man = %{version}-%{release}
 Requires: dnf-plugins-core-python = %{version}-%{release}
 Requires: dnf-plugins-core-python3 = %{version}-%{release}
+BuildRequires : Sphinx
 BuildRequires : buildreq-cmake
 BuildRequires : gettext-dev
 BuildRequires : pluggy
@@ -90,15 +91,16 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C
-export SOURCE_DATE_EPOCH=1541106928
+export SOURCE_DATE_EPOCH=1550714622
 mkdir -p clr-build
 pushd clr-build
+export LDFLAGS="${LDFLAGS} -fno-lto"
 %cmake .. -DPYTHON_DESIRED=3 -DWITH_MAN=0
 make  %{?_smp_mflags} ; make doc-man
 popd
 
 %install
-export SOURCE_DATE_EPOCH=1541106928
+export SOURCE_DATE_EPOCH=1550714622
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/dnf-plugins-core
 cp COPYING %{buildroot}/usr/share/package-licenses/dnf-plugins-core/COPYING
