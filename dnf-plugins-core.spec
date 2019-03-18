@@ -4,7 +4,7 @@
 #
 Name     : dnf-plugins-core
 Version  : 4.0.6
-Release  : 21
+Release  : 22
 URL      : https://github.com/rpm-software-management/dnf-plugins-core/archive/4.0.6.tar.gz
 Source0  : https://github.com/rpm-software-management/dnf-plugins-core/archive/4.0.6.tar.gz
 Summary  : Core Plugins for DNF
@@ -24,7 +24,8 @@ BuildRequires : py-python
 BuildRequires : pytest
 BuildRequires : tox
 BuildRequires : virtualenv
-Patch1: 0002-sphinx-build-3-does-not-exist.patch
+Patch1: 0001-Don-t-fail-if-the-locklist-is-not-defined.patch
+Patch2: 0002-sphinx-build-3-does-not-exist.patch
 
 %description
 Core Plugins for DNF. This package enhances DNF with builddep, config-manager,
@@ -86,13 +87,14 @@ python3 components for the dnf-plugins-core package.
 %prep
 %setup -q -n dnf-plugins-core-4.0.6
 %patch1 -p1
+%patch2 -p1
 
 %build
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C
-export SOURCE_DATE_EPOCH=1552945911
+export SOURCE_DATE_EPOCH=1552952251
 mkdir -p clr-build
 pushd clr-build
 export LDFLAGS="${LDFLAGS} -fno-lto"
@@ -101,7 +103,7 @@ make  %{?_smp_mflags} ; make doc-man
 popd
 
 %install
-export SOURCE_DATE_EPOCH=1552945911
+export SOURCE_DATE_EPOCH=1552952251
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/dnf-plugins-core
 cp COPYING %{buildroot}/usr/share/package-licenses/dnf-plugins-core/COPYING
