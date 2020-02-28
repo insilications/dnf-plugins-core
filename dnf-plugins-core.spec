@@ -4,10 +4,10 @@
 #
 Name     : dnf-plugins-core
 Version  : 4.0.6
-Release  : 27
+Release  : 28
 URL      : https://github.com/rpm-software-management/dnf-plugins-core/archive/4.0.6.tar.gz
 Source0  : https://github.com/rpm-software-management/dnf-plugins-core/archive/4.0.6.tar.gz
-Summary  : Core Plugins for DNF
+Summary  : Core DNF Plugins
 Group    : Development/Tools
 License  : GPL-2.0 GPL-2.0+
 Requires: dnf-plugins-core-libexec = %{version}-%{release}
@@ -86,6 +86,7 @@ python3 components for the dnf-plugins-core package.
 
 %prep
 %setup -q -n dnf-plugins-core-4.0.6
+cd %{_builddir}/dnf-plugins-core-4.0.6
 %patch1 -p1
 %patch2 -p1
 
@@ -93,24 +94,49 @@ python3 components for the dnf-plugins-core package.
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
-export LANG=C
-export SOURCE_DATE_EPOCH=1552952251
+export LANG=C.UTF-8
+export SOURCE_DATE_EPOCH=1582919246
 mkdir -p clr-build
 pushd clr-build
-export LDFLAGS="${LDFLAGS} -fno-lto"
+# -Werror is for werrorists
+export GCC_IGNORE_WERROR=1
+export CFLAGS="$CFLAGS -fno-lto "
+export FCFLAGS="$CFLAGS -fno-lto "
+export FFLAGS="$CFLAGS -fno-lto "
+export CXXFLAGS="$CXXFLAGS -fno-lto "
 %cmake .. -DPYTHON_DESIRED=3 -DWITH_MAN=0
-make  %{?_smp_mflags} ; make doc-man
+make  %{?_smp_mflags}  ; make doc-man
 popd
 
 %install
-export SOURCE_DATE_EPOCH=1552952251
+export SOURCE_DATE_EPOCH=1582919246
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/dnf-plugins-core
-cp COPYING %{buildroot}/usr/share/package-licenses/dnf-plugins-core/COPYING
+cp %{_builddir}/dnf-plugins-core-4.0.6/COPYING %{buildroot}/usr/share/package-licenses/dnf-plugins-core/4cc77b90af91e615a64ae04893fdffa7939db84c
 pushd clr-build
 %make_install
 popd
 %find_lang dnf-plugins-core
+## Remove excluded files
+rm -f %{buildroot}/usr/share/man/man1/debuginfo-install.1
+rm -f %{buildroot}/usr/share/man/man1/dnf-utils.1
+rm -f %{buildroot}/usr/share/man/man1/needs-restarting.1
+rm -f %{buildroot}/usr/share/man/man1/package-cleanup.1
+rm -f %{buildroot}/usr/share/man/man1/repo-graph.1
+rm -f %{buildroot}/usr/share/man/man1/repoclosure.1
+rm -f %{buildroot}/usr/share/man/man1/repodiff.1
+rm -f %{buildroot}/usr/share/man/man1/repomanage.1
+rm -f %{buildroot}/usr/share/man/man1/reposync.1
+rm -f %{buildroot}/usr/share/man/man1/yum-builddep.1
+rm -f %{buildroot}/usr/share/man/man1/yum-changelog.1
+rm -f %{buildroot}/usr/share/man/man1/yum-config-manager.1
+rm -f %{buildroot}/usr/share/man/man1/yum-debug-dump.1
+rm -f %{buildroot}/usr/share/man/man1/yum-debug-restore.1
+rm -f %{buildroot}/usr/share/man/man1/yumdownloader.1
+rm -f %{buildroot}/usr/share/man/man5/yum-changelog.conf.5
+rm -f %{buildroot}/usr/share/man/man5/yum-versionlock.conf.5
+rm -f %{buildroot}/usr/share/man/man8/yum-copr.8
+rm -f %{buildroot}/usr/share/man/man8/yum-versionlock.8
 
 %files
 %defattr(-,root,root,-)
@@ -121,29 +147,10 @@ popd
 
 %files license
 %defattr(0644,root,root,0755)
-/usr/share/package-licenses/dnf-plugins-core/COPYING
+/usr/share/package-licenses/dnf-plugins-core/4cc77b90af91e615a64ae04893fdffa7939db84c
 
 %files man
 %defattr(0644,root,root,0755)
-%exclude /usr/share/man/man1/debuginfo-install.1
-%exclude /usr/share/man/man1/dnf-utils.1
-%exclude /usr/share/man/man1/needs-restarting.1
-%exclude /usr/share/man/man1/package-cleanup.1
-%exclude /usr/share/man/man1/repo-graph.1
-%exclude /usr/share/man/man1/repoclosure.1
-%exclude /usr/share/man/man1/repodiff.1
-%exclude /usr/share/man/man1/repomanage.1
-%exclude /usr/share/man/man1/reposync.1
-%exclude /usr/share/man/man1/yum-builddep.1
-%exclude /usr/share/man/man1/yum-changelog.1
-%exclude /usr/share/man/man1/yum-config-manager.1
-%exclude /usr/share/man/man1/yum-debug-dump.1
-%exclude /usr/share/man/man1/yum-debug-restore.1
-%exclude /usr/share/man/man1/yumdownloader.1
-%exclude /usr/share/man/man5/yum-changelog.conf.5
-%exclude /usr/share/man/man5/yum-versionlock.conf.5
-%exclude /usr/share/man/man8/yum-copr.8
-%exclude /usr/share/man/man8/yum-versionlock.8
 /usr/share/man/man8/dnf.plugin.builddep.8
 /usr/share/man/man8/dnf.plugin.changelog.8
 /usr/share/man/man8/dnf.plugin.config_manager.8
