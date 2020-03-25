@@ -1,59 +1,60 @@
-From fbeac805155d8ce37493106abcfc42fb6d152441 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: William Douglas <william.douglas@intel.com>
 Date: Fri, 2 Feb 2018 01:03:50 +0000
-Subject: [PATCH 1/2] Don't fail if the locklist is not defined
+Subject: [PATCH] Don't fail if the locklist is not defined
 
 Signed-off-by: Patrick McCarty <patrick.mccarty@intel.com>
 ---
- plugins/versionlock.py | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ plugins/versionlock.py | 13 ++++---------
+ 1 file changed, 4 insertions(+), 9 deletions(-)
 
 diff --git a/plugins/versionlock.py b/plugins/versionlock.py
-index 26929e9..5f4aeef 100644
+index be4b6f2..293bf54 100644
 --- a/plugins/versionlock.py
 +++ b/plugins/versionlock.py
-@@ -68,7 +68,7 @@ class VersionLock(dnf.Plugin):
-             return
+@@ -102,11 +102,6 @@ class VersionLock(dnf.Plugin):
+                     locked_names.add(nevra.name)
+                     locked_query = locked_query.union(pat_query)
  
-         if not locklist_fn:
--            raise dnf.exceptions.Error(NO_LOCKLIST)
-+            return
- 
-         excludes_query = self.base.sack.query().filter(empty=True)
-         locked_query = self.base.sack.query().filter(empty=True)
-@@ -155,10 +155,14 @@ class VersionLockCommand(dnf.cli.Command):
-             for pat in _read_locklist():
-                 logger.info(pat)
+-        if count[1]:
+-            logger.debug(APPLY_EXCLUDE.format(locklist_fn, count[1]))
+-        if count[0]:
+-            logger.debug(APPLY_LOCK.format(locklist_fn, count[0]))
+-
+         if locked_names:
+             all_versions = self.base.sack.query().filter(name__glob=list(locked_names))
+             other_versions = all_versions.difference(locked_query)
+@@ -179,13 +174,13 @@ class VersionLockCommand(dnf.cli.Command):
+                 print(pat)
          elif cmd == 'clear':
-+            if not locklist_fn:
+             if not locklist_fn:
+-                raise dnf.exceptions.Error(NO_LOCKLIST)
 +                return
              with open(locklist_fn, 'w') as f:
                  # open in write mode truncates file
                  pass
          elif cmd == 'delete':
-+            if not locklist_fn:
+             if not locklist_fn:
+-                raise dnf.exceptions.Error(NO_LOCKLIST)
 +                return
              dirname = os.path.dirname(locklist_fn)
              (out, tmpfilename) = tempfile.mkstemp(dir=dirname, suffix='.tmp')
              locked_specs = _read_locklist()
-@@ -181,6 +185,8 @@ class VersionLockCommand(dnf.cli.Command):
- def _read_locklist():
+@@ -209,7 +204,7 @@ def _read_locklist():
      locklist = []
      try:
-+        if not locklist_fn:
+         if not locklist_fn:
+-            raise dnf.exceptions.Error(NO_LOCKLIST)
 +            return locklist
          with open(locklist_fn) as llfile:
              for line in llfile.readlines():
                  if line.startswith('#') or line.strip() == '':
-@@ -209,6 +215,8 @@ def _write_locklist(base, args, try_installed, comment, info, prefix):
-             specs.add(pkgtup2spec(*pkg.pkgtup))
- 
+@@ -254,7 +249,7 @@ def _write_locklist(base, args, raw, try_installed, comment, info, prefix):
      if specs:
-+        if not locklist_fn:
-+            return
-         with open(locklist_fn, 'a') as f:
-             f.write(comment)
-             for spec in specs:
--- 
-2.20.1
-
+         try:
+             if not locklist_fn:
+-                raise dnf.exceptions.Error(NO_LOCKLIST)
++                return
+             with open(locklist_fn, 'a') as f:
+                 f.write(comment)
+                 for spec in specs:
