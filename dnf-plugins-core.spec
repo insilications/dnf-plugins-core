@@ -23,6 +23,7 @@ BuildRequires : buildreq-distutils3
 BuildRequires : bzip2-dev
 BuildRequires : bzip2-staticdev
 BuildRequires : check-dev
+BuildRequires : dnf
 BuildRequires : doxygen
 BuildRequires : expat-dev
 BuildRequires : expat-staticdev
@@ -38,8 +39,8 @@ BuildRequires : json-c-staticdev
 BuildRequires : libassuan-dev
 BuildRequires : libcomps-dev
 BuildRequires : libcomps-staticdev
+BuildRequires : libdnf
 BuildRequires : libdnf-dev
-BuildRequires : libdnf-staticdev
 BuildRequires : libgcrypt
 BuildRequires : libgcrypt-dev
 BuildRequires : libmodulemd
@@ -147,7 +148,7 @@ unset https_proxy
 unset no_proxy
 export SSL_CERT_FILE=/var/cache/ca-certs/anchors/ca-certificates.crt
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1618941325
+export SOURCE_DATE_EPOCH=1618944157
 mkdir -p clr-build
 pushd clr-build
 export GCC_IGNORE_WERROR=1
@@ -192,7 +193,7 @@ make  %{?_smp_mflags}  ; make doc-man
 popd
 
 %install
-export SOURCE_DATE_EPOCH=1618941325
+export SOURCE_DATE_EPOCH=1618944157
 rm -rf %{buildroot}
 pushd clr-build
 %make_install

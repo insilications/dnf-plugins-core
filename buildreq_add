@@ -5,6 +5,7 @@ buildreq-distutils3
 bzip2-dev
 bzip2-staticdev
 check-dev
+dnf
 doxygen
 expat-dev
 expat-staticdev
@@ -20,6 +21,8 @@ json-c-staticdev
 libassuan-dev
 libcomps-dev
 libcomps-staticdev
+libdnf
+libdnf-dev
 libgcrypt
 libgcrypt-dev
 libmodulemd
@@ -50,6 +53,8 @@ py-python
 pytest
 python3-dev
 python3-staticdev
+rpm-dev
+rpm-staticdev
 Sphinx
 swig
 tox
@@ -62,7 +67,3 @@ zlib-dev
 zlib-staticdev
 zstd-dev
 zstd-staticdev
-libdnf-dev
-libdnf-staticdev
-rpm-dev
-rpm-staticdev
