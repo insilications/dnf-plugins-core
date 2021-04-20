@@ -6,8 +6,8 @@
 Name     : dnf-plugins-core
 Version  : 4.0.21
 Release  : 35
-URL      : file:///aot/build/clearlinux/packages/dnf-plugins-core/dnf-plugins-core-4.0.21.tar.gz
-Source0  : file:///aot/build/clearlinux/packages/dnf-plugins-core/dnf-plugins-core-4.0.21.tar.gz
+URL      : https://github.com/rpm-software-management/dnf-plugins-core/archive/refs/tags/4.0.21.tar.gz
+Source0  : https://github.com/rpm-software-management/dnf-plugins-core/archive/refs/tags/4.0.21.tar.gz
 Summary  : Core Plugins for DNF
 Group    : Development/Tools
 License  : GPL-2.0 GPL-2.0+
@@ -137,8 +137,8 @@ python3 components for the dnf-plugins-core package.
 
 
 %prep
-%setup -q -n dnf-plugins-core
-cd %{_builddir}/dnf-plugins-core
+%setup -q -n dnf-plugins-core-4.0.21
+cd %{_builddir}/dnf-plugins-core-4.0.21
 %patch1 -p1
 
 %build
@@ -147,7 +147,7 @@ unset https_proxy
 unset no_proxy
 export SSL_CERT_FILE=/var/cache/ca-certs/anchors/ca-certificates.crt
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1618912797
+export SOURCE_DATE_EPOCH=1618941325
 mkdir -p clr-build
 pushd clr-build
 export GCC_IGNORE_WERROR=1
@@ -192,7 +192,7 @@ make  %{?_smp_mflags}  ; make doc-man
 popd
 
 %install
-export SOURCE_DATE_EPOCH=1618912797
+export SOURCE_DATE_EPOCH=1618941325
 rm -rf %{buildroot}
 pushd clr-build
 %make_install
