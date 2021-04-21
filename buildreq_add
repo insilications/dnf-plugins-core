@@ -21,6 +21,7 @@ compat-lua-53-man
 compat-lua-53-staticdev
 db-dev
 dbus-dev
+dbus-python
 dejagnu
 dnf
 docbook-utils
@@ -88,7 +89,8 @@ libassuan-dev
 libcap
 libcap-dev
 libcomps-dev
-libcomps-staticdev
+rpm
+rpm-dev
 libdnf
 libdnf-dev
 libedit
@@ -100,11 +102,11 @@ libgcrypt
 libgcrypt-dev
 libmodulemd
 libmodulemd-dev
-libmodulemd-staticdev
+#libmodulemd-staticdev
 librepo-dev
-librepo-staticdev
+#librepo-staticdev
 libsolv-dev
-libsolv-staticdev
+#libsolv-staticdev
 libstdc++
 libtool
 libtool-dev
@@ -133,7 +135,6 @@ pytest
 python3-dev
 python3-staticdev
 rpm-dev
-rpm-staticdev
 Sphinx
 sqlite-autoconf
 sqlite-autoconf-dev

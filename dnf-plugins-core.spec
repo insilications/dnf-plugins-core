@@ -18,39 +18,112 @@ Requires: dnf-plugins-core-python = %{version}-%{release}
 Requires: dnf-plugins-core-python3 = %{version}-%{release}
 BuildRequires : Flask
 BuildRequires : Sphinx
+BuildRequires : acl-dev
+BuildRequires : acl-staticdev
+BuildRequires : automake
+BuildRequires : automake-dev
+BuildRequires : binutils-dev
+BuildRequires : binutils-extras
+BuildRequires : bison
 BuildRequires : buildreq-cmake
 BuildRequires : buildreq-distutils3
 BuildRequires : bzip2-dev
 BuildRequires : bzip2-staticdev
 BuildRequires : check-dev
+BuildRequires : compat-lua-53
+BuildRequires : compat-lua-53-abi
+BuildRequires : compat-lua-53-bin
+BuildRequires : compat-lua-53-dev
+BuildRequires : compat-lua-53-lib
+BuildRequires : compat-lua-53-man
+BuildRequires : compat-lua-53-staticdev
+BuildRequires : db-dev
+BuildRequires : dbus-dev
+BuildRequires : dbus-python
+BuildRequires : dejagnu
 BuildRequires : dnf
+BuildRequires : docbook-utils
+BuildRequires : docbook-xml
 BuildRequires : doxygen
+BuildRequires : elfutils-dev
 BuildRequires : expat-dev
 BuildRequires : expat-staticdev
+BuildRequires : expect
+BuildRequires : fakechroot
+BuildRequires : fakechroot-dev
+BuildRequires : fakechroot-staticdev
+BuildRequires : file
+BuildRequires : file-abi
+BuildRequires : file-bin
+BuildRequires : file-data
+BuildRequires : file-dev
+BuildRequires : file-lib
+BuildRequires : file-license
+BuildRequires : file-man
+BuildRequires : flex
+BuildRequires : gcc
+BuildRequires : gcc-abi
+BuildRequires : gcc-dev
+BuildRequires : gcc-dev32
+BuildRequires : gcc-doc
+BuildRequires : gcc-libgcc32
+BuildRequires : gcc-libs-math
+BuildRequires : gcc-libstdc++32
+BuildRequires : gcc-libubsan
+BuildRequires : gcc-locale
+BuildRequires : gdb
+BuildRequires : gdb-dev
+BuildRequires : gettext-bin
 BuildRequires : gettext-dev
 BuildRequires : git
+BuildRequires : glibc-abi
+BuildRequires : glibc-bench
 BuildRequires : glibc-bin
+BuildRequires : glibc-dev
+BuildRequires : glibc-dev32
+BuildRequires : glibc-doc
+BuildRequires : glibc-extras
+BuildRequires : glibc-lib-avx2
+BuildRequires : glibc-libc32
+BuildRequires : glibc-locale
+BuildRequires : glibc-nscd
+BuildRequires : glibc-staticdev
+BuildRequires : glibc-utils
+BuildRequires : gmp-dev
+BuildRequires : gmp-staticdev
 BuildRequires : gnupg
 BuildRequires : gpgme
 BuildRequires : gpgme-dev
+BuildRequires : graphviz
+BuildRequires : guile
 BuildRequires : json-c
 BuildRequires : json-c-dev
 BuildRequires : json-c-staticdev
+BuildRequires : libarchive
+BuildRequires : libarchive-dev
+BuildRequires : libarchive-staticdev
 BuildRequires : libassuan-dev
+BuildRequires : libcap
+BuildRequires : libcap-dev
 BuildRequires : libcomps-dev
-BuildRequires : libcomps-staticdev
 BuildRequires : libdnf
 BuildRequires : libdnf-dev
+BuildRequires : libedit
+BuildRequires : libedit-dev
+BuildRequires : libffi-dev
+BuildRequires : libffi-staticdev
+BuildRequires : libgcc1
 BuildRequires : libgcrypt
 BuildRequires : libgcrypt-dev
 BuildRequires : libmodulemd
 BuildRequires : libmodulemd-dev
-BuildRequires : libmodulemd-staticdev
 BuildRequires : librepo-dev
-BuildRequires : librepo-staticdev
 BuildRequires : libsolv-dev
-BuildRequires : libsolv-staticdev
 BuildRequires : libstdc++
+BuildRequires : libtool
+BuildRequires : libtool-dev
+BuildRequires : libunwind
+BuildRequires : libunwind-dev
 BuildRequires : libxml2-dev
 BuildRequires : libxml2-staticdev
 BuildRequires : lz4-dev
@@ -61,24 +134,31 @@ BuildRequires : m4
 BuildRequires : nettle-dev
 BuildRequires : nettle-staticdev
 BuildRequires : nose
+BuildRequires : nspr-dev
 BuildRequires : openssl-dev
 BuildRequires : openssl-staticdev
 BuildRequires : pkg-config
 BuildRequires : pkg-config-dev
 BuildRequires : pluggy
+BuildRequires : popt
 BuildRequires : popt-dev
 BuildRequires : py-python
 BuildRequires : pytest
 BuildRequires : python3-dev
 BuildRequires : python3-staticdev
+BuildRequires : rpm
 BuildRequires : rpm-dev
-BuildRequires : rpm-staticdev
+BuildRequires : sqlite-autoconf
+BuildRequires : sqlite-autoconf-dev
+BuildRequires : sqlite-autoconf-staticdev
 BuildRequires : swig
 BuildRequires : tox
+BuildRequires : unzip
 BuildRequires : virtualenv
 BuildRequires : xattr
 BuildRequires : xz-dev
 BuildRequires : xz-staticdev
+BuildRequires : zip
 BuildRequires : zlib
 BuildRequires : zlib-dev
 BuildRequires : zlib-staticdev
@@ -87,7 +167,8 @@ BuildRequires : zstd-staticdev
 # Suppress stripping binaries
 %define __strip /bin/true
 %define debug_package %{nil}
-Patch1: 0002-sphinx-build-3-does-not-exist.patch
+Patch1: 0001-Don-t-fail-if-the-locklist-is-not-defined.patch
+Patch2: 0002-sphinx-build-3-does-not-exist.patch
 
 %description
 Core Plugins for DNF. This package enhances DNF with builddep, config-manager,
@@ -141,6 +222,7 @@ python3 components for the dnf-plugins-core package.
 %setup -q -n dnf-plugins-core-4.0.21
 cd %{_builddir}/dnf-plugins-core-4.0.21
 %patch1 -p1
+%patch2 -p1
 
 %build
 unset http_proxy
@@ -148,7 +230,7 @@ unset https_proxy
 unset no_proxy
 export SSL_CERT_FILE=/var/cache/ca-certs/anchors/ca-certificates.crt
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1618944157
+export SOURCE_DATE_EPOCH=1618981679
 mkdir -p clr-build
 pushd clr-build
 export GCC_IGNORE_WERROR=1
@@ -193,7 +275,7 @@ make  %{?_smp_mflags}  ; make doc-man
 popd
 
 %install
-export SOURCE_DATE_EPOCH=1618944157
+export SOURCE_DATE_EPOCH=1618981679
 rm -rf %{buildroot}
 pushd clr-build
 %make_install
